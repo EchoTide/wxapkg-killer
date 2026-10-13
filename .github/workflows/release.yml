@@ -1,0 +1,97 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ matrix.goos }}-${{ matrix.goarch }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - goos: windows
+            goarch: amd64
+            ext: .exe
+          - goos: windows
+            goarch: arm64
+            ext: .exe
+          - goos: darwin
+            goarch: amd64
+            ext: ''
+          - goos: darwin
+            goarch: arm64
+            ext: ''
+          - goos: linux
+            goarch: amd64
+            ext: ''
+          - goos: linux
+            goarch: arm64
+            ext: ''
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version: '1.25'
+          cache: true
+
+      - name: Build
+        env:
+          CGO_ENABLED: '0'
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+          VERSION: ${{ github.ref_type == 'tag' && github.ref_name || 'dev' }}
+        run: |
+          mkdir -p dist
+          go build -trimpath -ldflags="-s -w -X main.version=${VERSION}" \
+            -o "dist/wxapkg-killer-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.ext }}" .
+
+      - name: Package
+        if: matrix.goos == 'windows'
+        run: cd dist && zip "wxapkg-killer-${{ matrix.goos }}-${{ matrix.goarch }}.zip" *
+      - name: Package (tar.gz)
+        if: matrix.goos != 'windows'
+        run: cd dist && tar czf "wxapkg-killer-${{ matrix.goos }}-${{ matrix.goarch }}.tar.gz" wxapkg-killer-*
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wxapkg-killer-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: dist/*.zip
+          if-no-files-found: ignore
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wxapkg-killer-${{ matrix.goos }}-${{ matrix.goarch }}-tgz
+          path: dist/*.tar.gz
+          if-no-files-found: ignore
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Checksums
+        run: |
+          cd artifacts
+          # 哈希的是压缩包本身，安装脚本按压缩包文件名比对，不要改成哈希解压后的二进制
+          sha256sum *.zip *.tar.gz > checksums.txt
+          cat checksums.txt
+
+      - name: Publish
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/*
+          generate_release_notes: true

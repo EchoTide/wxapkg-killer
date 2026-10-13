@@ -1,0 +1,17 @@
+wxapkg-killer
+Copyright (c) 2026 wxapkg-killer contributors
+
+This project is licensed under the MIT License. See LICENSE.
+
+Third-party dependency
+----------------------
+
+github.com/wux1an/wxapkg
+https://github.com/wux1an/wxapkg
+
+Used for WeChat cache discovery and .wxapkg decrypt/unpack (package wechat).
+This dependency does not declare an open-source license. The MIT license of
+this repository does NOT cover that code. Release binaries statically link it.
+This project calls its exported API and does not copy or modify its source.
+Redistribution of those binaries is at the user's own risk until upstream
+publishes license terms.

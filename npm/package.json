@@ -1,0 +1,43 @@
+{
+  "name": "wxapkg-killer-mcp",
+  "version": "1.0.0",
+  "description": "微信小程序/小游戏解包 MCP Server —— 让 Agent 自主扫描缓存、解密解包、检视文件并审计暴露面",
+  "license": "MIT",
+  "author": "EchoTide",
+  "publishConfig": {
+    "access": "public"
+  },
+  "bin": {
+    "wxapkg-killer": "bin/cli.js"
+  },
+  "files": [
+    "bin",
+    "scripts"
+  ],
+  "scripts": {
+    "postinstall": "node scripts/install.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "wxapkg",
+    "wechat",
+    "miniprogram",
+    "mini-game",
+    "unpack",
+    "decompile",
+    "reverse-engineering",
+    "security-audit",
+    "agent"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EchoTide/wxapkg-killer.git",
+    "directory": "npm"
+  },
+  "homepage": "https://github.com/EchoTide/wxapkg-killer#readme",
+  "bugs": "https://github.com/EchoTide/wxapkg-killer/issues"
+}

@@ -1,0 +1,26 @@
+# 构建产物
+wxapkg-killer
+wxapkg-killer.exe
+wxapkg-killer.exe~
+*.exe~
+/dist/
+/build/
+
+# npm 包装包下载的二进制
+npm/vendor/
+npm/node_modules/
+
+# 解包输出
+out/
+
+# 测试与调试产物
+tests/_*.log
+tests/_*.png
+_*.log
+_*.png
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
