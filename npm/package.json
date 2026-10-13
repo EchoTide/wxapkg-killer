@@ -1,6 +1,6 @@
 {
   "name": "wxapkg-killer-mcp",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "微信小程序/小游戏解包 MCP Server —— 让 Agent 自主扫描缓存、解密解包、检视文件并审计暴露面",
   "license": "MIT",
   "author": "EchoTide",

@@ -5,7 +5,7 @@
 #
 # 可选环境变量：
 #   WXAPKG_REPO      仓库，默认 EchoTide/wxapkg-killer
-#   WXAPKG_VERSION   版本号，默认 latest（如 v1.0.0）
+#   WXAPKG_VERSION   版本号，默认 latest（如 v0.1.0）
 #   WXAPKG_BIN_DIR   安装目录，默认 ~/.local/bin
 # 可选参数：
 #   --no-setup       只下载二进制，不注册到 Agent

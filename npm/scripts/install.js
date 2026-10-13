@@ -5,7 +5,7 @@
 // 可通过以下方式跳过下载（例如离线环境或镜像策略）：
 //   WXAPKG_KILLER_SKIP_DOWNLOAD=1 npm i wxapkg-killer-mcp
 // 指定版本：
-//   WXAPKG_KILLER_VERSION=v1.0.0 npm i wxapkg-killer-mcp
+//   WXAPKG_KILLER_VERSION=v0.1.0 npm i wxapkg-killer-mcp
 // 指定仓库（fork 场景）：
 //   WXAPKG_REPO=EchoTide/wxapkg-killer npm i wxapkg-killer-mcp
 
