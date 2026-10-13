@@ -51,15 +51,7 @@ curl -fsSL https://raw.githubusercontent.com/EchoTide/wxapkg-killer/main/install
 irm https://raw.githubusercontent.com/EchoTide/wxapkg-killer/main/install.ps1 | iex
 ```
 
-**或者用 npx**
-
-```bash
-npx wxapkg-killer-mcp setup
-```
-
-npm 包名是 `wxapkg-killer-mcp`，安装后的命令名才是 `wxapkg-killer`。
-
-三个入口做的事一样：下载与平台匹配的预编译二进制 → 安装 → 调 `setup`。
+两个入口做的事一样：下载与平台匹配的预编译二进制 → 安装 → 调 `setup`。
 只装不注册可加 `--no-setup`。
 
 ### 方式二：下载预编译二进制
