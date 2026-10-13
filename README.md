@@ -3,15 +3,22 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](./LICENSE)
 [![Release](https://github.com/EchoTide/wxapkg-killer/actions/workflows/release.yml/badge.svg)](https://github.com/EchoTide/wxapkg-killer/actions/workflows/release.yml)
 
-**English.** MCP server for scanning a local WeChat mini-program cache, decrypting `.wxapkg`, inspecting files, and auditing what an attacker would see. It does not upload anything. Tools run with the current user's permissions and are not a sandbox. The GitHub repository name is `wxapkg-killer` — publish this directory as the repository root, not a folder named `mcp`.
+**English.** MCP server that unpacks WeChat mini-program and mini-game `.wxapkg` packages from your local cache, so an AI agent can read and analyze the code for security research, feature analysis, and self-audit. Analyze only apps you own or are authorized to test. It does not upload anything. Tools run with the current user's permissions and are not a sandbox.
 
-把微信小程序 / 小游戏的 `.wxapkg` 解包能力封装成 **MCP Server**，让 Agent 能自主完成：
+把微信小程序 / 小游戏在本机缓存的 `.wxapkg` 解密、解包，并以 **MCP Server** 的形式交给 Agent。解包之后，源码、配置和资源都在本地目录里，Agent 可以直接读、搜、分析，例如：
+
+- **安全研究**：找硬编码的密钥、接口域名、调试开关、未下线的管理入口
+- **功能分析**：梳理页面结构、分包划分、调用的 `wx.*` 接口和后端接口
+- **引擎识别**：判断是 Cocos、Laya、Egret、Unity、Taro 还是 uni-app（`wxapkg_audit` 第 1 节）
+- **开发者自查**：看解包之后，别人能直接拿到什么
 
 ```
-扫描本机缓存  →  解密解包  →  检视文件  →  暴露面审计
+扫描本机缓存  →  解密解包  →  Agent 读取与分析  →  （可选）暴露面审计
 ```
 
 不用点 GUI、不用记命令行，Agent 一条指令就能走完整条链路。
+
+> **使用范围**：只分析你自己拥有、或已获得授权的小程序 / 小游戏。未经授权分析他人的小程序，可能侵犯著作权、违反微信平台规则，并可能触犯相关法律，后果由使用者自行承担。工具只做解密、解包和 JS/JSON/HTML 美化，不还原 WXML/WXSS，代码理解由 Agent 完成。
 
 ---
 
@@ -21,8 +28,7 @@
 salt（`saltiest`）、IV（`the iv: 16 bytes`）、迭代次数（1000）全是硬编码常量。
 所以只要包落到用户磁盘上，解密就是零成本的确定性操作。
 
-这意味着**客户端代码和资源本质上是可被完整还原的**——本项目就是这件事的证明，
-同时也能帮助开发者自查：解包之后，攻击者到底能看到什么。
+这意味着**小程序的客户端代码和资源本质上可以被完整取出**。本项目把这一步做成 Agent 能调用的工具，取出之后的分析也交给 Agent：读代码、搜关键字、看资源结构。
 
 ---
 
@@ -195,9 +201,9 @@ OpenCode V2 的条目不同，写在 `mcp.servers` 里，`command` 是数组：
 
 在 Agent 里直接说：
 
-> 扫一下我微信里的小程序，把最近打开的那个解包，然后审计一下暴露面。
+> 扫一下我微信里的小程序，把最近打开的那个解包，然后梳理它的页面结构和分包划分。
 
-Agent 会自行调用 `wxapkg_scan` → `wxapkg_unpack` → `wxapkg_audit`。
+Agent 会自行调用 `wxapkg_scan` → `wxapkg_unpack`，再用 `wxapkg_list_files` / `wxapkg_read_file` / `wxapkg_search` 读代码。
 
 也可以单独问：
 
@@ -205,7 +211,11 @@ Agent 会自行调用 `wxapkg_scan` → `wxapkg_unpack` → `wxapkg_audit`。
 >
 > 这个包用的什么引擎？ → `wxapkg_audit` 第 1 节
 >
+> 它请求了哪些后端域名？ → `wxapkg_audit` 第 2 节
+>
 > 有哪些分包缓存没拉到？ → `wxapkg_audit` 第 5 节
+>
+> 做一次完整的暴露面审计，给出加固建议。 → `wxapkg_audit`
 
 ---
 
@@ -276,8 +286,3 @@ xattr -d com.apple.quarantine ~/.local/bin/wxapkg-killer
 > 本项目只把它当作外部 Go module 调用其导出 API，没有复制或修改其源码，也没有获得再分发授权。
 > 若上游后续补充协议，以该协议为准；在此之前，使用或再分发二进制的风险由使用者自行承担。
 > 详见 [NOTICE](./NOTICE)。
-
-## 免责声明
-
-本工具仅用于**对自己拥有或已授权的小程序进行安全自查与学习研究**。
-请勿用于侵犯他人知识产权或违反微信平台规则的行为，使用者需自行承担相应责任。
