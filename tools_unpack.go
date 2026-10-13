@@ -22,7 +22,7 @@ func registerUnpackTools(s *server.MCPServer) {
 				"密钥自动取 wxid（微信的 wxapkg 加密密钥就是 wxid 本身，salt/IV/迭代次数均为硬编码常量）。\n"+
 				"解包后可用 wxapkg_list_files / wxapkg_read_file / wxapkg_search / wxapkg_audit 继续分析。"),
 		mcp.WithString("wxid",
-			mcp.Description("小程序 ID，形如 wxf44c1b7203d1a6d6。与 source_path 二选一。")),
+			mcp.Description("小程序 ID，形如 wx0123456789abcdef。与 source_path 二选一。")),
 		mcp.WithString("source_path",
 			mcp.Description("wxapkg 文件或其所在目录的绝对路径。与 wxid 二选一。")),
 		mcp.WithString("output_dir",

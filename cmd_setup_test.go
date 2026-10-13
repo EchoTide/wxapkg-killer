@@ -48,7 +48,7 @@ func TestApplyJSONClientPreservesUnrelatedKeys(t *testing.T) {
 	if err := os.WriteFile(p, orig, 0o644); err != nil {
 		t.Fatal(err)
 	}
-	exe := `H:\tools\wxapkg-killer.exe`
+	exe := `C:\tools\wxapkg-killer.exe`
 	if err := applyJSONClient(p, exe, false); err != nil {
 		t.Fatal(err)
 	}
@@ -102,7 +102,7 @@ func TestUpsertOpenCodePreservesSiblingsAndJSONC(t *testing.T) {
   "provider": { "name": "keep-me", "note": "https://example.com//not-a-comment", },
 }
 `)
-	exe := `H:\project\wxapkg-killer\mcp\wxapkg-killer.exe`
+	exe := `C:\tools\wxapkg-killer.exe`
 	out, changed, err := upsertOpenCodeServer(src, exe)
 	if err != nil {
 		t.Fatal(err)
